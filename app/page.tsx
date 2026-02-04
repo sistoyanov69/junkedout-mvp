@@ -20,7 +20,7 @@ export default function Home() {
         <div className="flex justify-center gap-4 mt-6">
 
           <a
-            href="#"
+            href="/submit"
             className="px-6 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-200 transition"
           >
             Submit Experience

@@ -56,7 +56,7 @@ The project is preparing for public collaboration and contributor onboarding.
 JunkedOut operates under a founder-led governance model with clearly documented principles, safeguards, and non-negotiables.
 
 For full details, see:  
-**[Founder Manifesto & Project README](MANIFESTO.md)**
+**[MANIFESTO.md](MANIFESTO.md)**
 
 ---
 

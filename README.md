@@ -18,13 +18,13 @@ JunkedOut addresses this disconnect by collecting, validating, and analyzing rea
 
 ## What JunkedOut is (and is not)
 
-JunkedOut is:
+**JunkedOut is:**
 - A transparency and research platform
 - Evidence-driven and methodology-focused
 - Privacy-first and GDPR-aware
 - Open-source and founder-led
 
-JunkedOut is not:
+**JunkedOut is not:**
 - A court, arbitration body, or legal authority
 - A harassment or public shaming platform
 - An unmoderated complaint board
@@ -34,11 +34,11 @@ JunkedOut is not:
 
 ## Key components
 
-- Structured, anonymized reporting of recruitment experiences
-- Moderation and validation workflows
-- Aggregated analytics and public indicators
-- Privacy-preserving recruitment tools (identity-shielded hiring functionality)
-- Open research access under controlled conditions
+- Structured, anonymized reporting of recruitment experiences  
+- Moderation and validation workflows  
+- Aggregated analytics and public indicators  
+- Privacy-preserving recruitment tools (identity-shielded hiring functionality)  
+- Open research access under controlled conditions  
 
 ---
 
@@ -55,8 +55,8 @@ The project is preparing for public collaboration and contributor onboarding.
 
 JunkedOut operates under a founder-led governance model with clearly documented principles, safeguards, and non-negotiables.
 
-For full details, see:
-MANIFESTO.md
+For full details, see:  
+**[MANIFESTO.md](MANIFESTO.md)**
 
 ---
 
@@ -65,8 +65,8 @@ MANIFESTO.md
 Contributions are welcome from developers, data scientists, legal experts, researchers, and practitioners.
 
 Please start by reading:
-- CONTRIBUTING.md
-- CODE_OF_CONDUCT.md
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
 If you’re interested:
 - open an Issue
@@ -111,8 +111,8 @@ To contribute, start by opening an Issue that:
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3 (AGPLv3).  
-See the LICENSE file for details.
+This project is licensed under the **GNU Affero General Public License v3 (AGPLv3)**.  
+See the `LICENSE` file for details.
 
 ---
 

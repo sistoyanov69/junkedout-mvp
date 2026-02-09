@@ -7,7 +7,8 @@ If you discover a security vulnerability in JunkedOut, please do **not** open a 
 Instead, report it privately:
 
 - **Preferred:** GitHub private security advisory (Security tab → “Report a vulnerability”)
-- **Fallback email:** sistoyanov69@gmail.com
+- **Security contact:** security@junkedout.org
+
 
 Please include:
 - A clear description of the issue

@@ -79,3 +79,11 @@ If you’re interested:
 
 This project is licensed under the **GNU Affero General Public License v3 (AGPLv3)**.  
 See the `LICENSE` file for details.
+
+---
+
+## Contacts
+
+Contact: contact@junkedout.org
+Security: security@junkedout.org
+Founder: founder@junkedout.org

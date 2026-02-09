@@ -37,7 +37,7 @@ JunkedOut addresses this disconnect by collecting, validating, and analyzing rea
 - Structured, anonymized reporting of recruitment experiences  
 - Moderation and validation workflows  
 - Aggregated analytics and public indicators  
-- Privacy-preserving recruitment tools (including *BlindHire*)  
+- Privacy-preserving recruitment tools (identity-shielded hiring functionality) 
 - Open research access under controlled conditions  
 
 ---

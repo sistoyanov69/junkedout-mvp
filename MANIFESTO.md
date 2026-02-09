@@ -169,7 +169,7 @@ It consists of the following core components:
 - A structured data repository that organizes validated reports across standardized dimensions such as industry, role category, geography, process stage, and selection methods.
 - An analytical and visualization engine that transforms aggregated data into publicly accessible reports, dashboards, and comparative indicators.
 - An open research and access interface that enables controlled use of anonymized datasets by researchers, journalists, NGOs, and public institutions.
-- Privacy-preserving recruitment tools, including the BlindHire framework, which enable organizations to conduct bias-resistant hiring processes and receive transparency-based performance indicators.
+- Privacy-preserving recruitment tools, including an identity-shielded hiring framework, which enable organizations to conduct bias-resistant hiring processes and receive transparency-based performance indicators.
 
 Together, these components form an evidence-based infrastructure for monitoring recruitment practices and supporting systemic improvement.
 
@@ -531,7 +531,7 @@ JunkedOut pursues diversified, mission-aligned revenue models designed to suppor
   Controlled access to curated, anonymised datasets for academic, journalistic, and policy research.
 
 - **Compliance and certification programmes**  
-  Verification and certification services linked to participation in transparency and bias-resilient recruitment frameworks, including BlindHire.
+  Verification and certification services linked to participation in transparency and bias-resilient recruitment frameworks, including identity-shielded hiring mechanisms provided by the platform.
 
 - **White-label and deployment services**  
   Licensed deployments for unions, advocacy groups, and institutional partners under defined governance conditions.
@@ -590,7 +590,7 @@ Ongoing work focuses on system stabilisation, usability refinement, and preparat
 
 - Expand data coverage across additional industries and regions.
 - Implement advanced scoring and feedback mechanisms.
-- Deploy initial BlindHire functionality in pilot environments.
+- Deploy initial identity-shielded hiring functionality in pilot environments.
 - Establish formal partnerships with research and civil society organisations.
 - Introduce structured contributor and moderator programmes.
 

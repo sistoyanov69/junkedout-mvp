@@ -65,8 +65,8 @@ For full details, see:
 Contributions are welcome from developers, data scientists, legal experts, researchers, and practitioners.
 
 Please start by reading:
-- `CONTRIBUTING.md`
-- `CODE_OF_CONDUCT.md`
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
 If you’re interested:
 - open an Issue

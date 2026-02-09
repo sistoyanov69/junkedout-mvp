@@ -96,7 +96,7 @@ Retaliation against individuals who report concerns or participate in investigat
 This Code of Conduct is interpreted in alignment with:
 
 - The project’s mission and principles.
-- The governance framework described in `MANIFESTO.md`.
+- The governance framework described in [MANIFESTO.md](./MANIFESTO.md).
 - Applicable legal and ethical standards.
 
 The Code of Conduct may be updated as the project evolves. Substantive changes are documented and publicly recorded.

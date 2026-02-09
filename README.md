@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JunkedOut
 
-## Getting Started
+JunkedOut is an open-source transparency platform that analyzes real-world hiring experiences to expose systemic barriers and improve labor market fairness.
 
-First, run the development server:
+It focuses on evidence-based insight, privacy-preserving data collection, and constructive feedback mechanisms that support better recruitment practices for individuals, organizations, and institutions.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Why JunkedOut exists
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Across industries and countries, many qualified and experienced professionals are excluded from the labor market through opaque, automated, and fragmented recruitment processes.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+At the same time, employers report persistent talent shortages, rising recruitment costs, and repeated operational mistakes caused by lost institutional knowledge.
 
-## Learn More
+JunkedOut addresses this disconnect by collecting, validating, and analyzing real-world recruitment data to make systemic patterns visible and actionable.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## What JunkedOut is (and is not)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**JunkedOut is:**
+- A transparency and research platform
+- Evidence-driven and methodology-focused
+- Privacy-first and GDPR-aware
+- Open-source and founder-led
 
-## Deploy on Vercel
+**JunkedOut is not:**
+- A court, arbitration body, or legal authority
+- A harassment or public shaming platform
+- An unmoderated complaint board
+- A replacement for legal or HR advice
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Key components
+
+- Structured, anonymized reporting of recruitment experiences  
+- Moderation and validation workflows  
+- Aggregated analytics and public indicators  
+- Privacy-preserving recruitment tools (including *BlindHire*)  
+- Open research access under controlled conditions  
+
+---
+
+## Project status
+
+JunkedOut is in early active development.
+
+Core infrastructure and governance foundations are in place.  
+The project is preparing for public collaboration and contributor onboarding.
+
+---
+
+## Governance and principles
+
+JunkedOut operates under a founder-led governance model with clearly documented principles, safeguards, and non-negotiables.
+
+For full details, see:  
+**[Founder Manifesto & Project README](MANIFESTO.md)**
+
+---
+
+## How to contribute
+
+Contributions are welcome from developers, data scientists, legal experts, researchers, and practitioners.
+
+Please start by reading:
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+
+If you’re interested:
+- open an Issue
+- propose an improvement
+- or start a discussion
+
+---
+
+## License
+
+This project is licensed under the **GNU Affero General Public License v3 (AGPLv3)**.  
+See the `LICENSE` file for details.

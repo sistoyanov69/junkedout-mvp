@@ -215,12 +215,14 @@ JunkedOut operates through a structured, multi-stage workflow designed to ensure
 JunkedOut applies strict separation between publicly accessible information and restricted internal data in order to protect individual privacy, ensure methodological integrity, and comply with applicable legal requirements.
 
 **Publicly accessible information includes:**
+
 - Aggregated statistical indicators, trend analyses, and comparative reports.
 - Anonymized organizational profiles based on validated, multi-source data.
 - Methodological descriptions, limitations, and governance policies.
 - Non-identifiable summaries of systemic patterns and recurring practices.
 
 **Restricted internal information includes:**
+
 - Raw submissions, supporting documents, and metadata.
 - Personal identifiers and indirectly identifiable attributes.
 - Moderation records, verification notes, and internal assessments.
@@ -261,6 +263,7 @@ JunkedOut applies rigorous data quality and validation standards to ensure relia
 JunkedOut publishes only information that meets defined relevance, quality, and integrity standards.
 
 Content eligible for publication must:
+
 - Relate directly to documented recruitment or hiring processes.
 - Be submitted in accordance with platform guidelines.
 - Contain sufficient contextual and factual information.
@@ -268,6 +271,7 @@ Content eligible for publication must:
 - Avoid defamatory, abusive, or discriminatory language.
 
 Content is rejected or restricted if it:
+
 - Contains unverifiable accusations or speculation.
 - Includes personal attacks, threats, or hate speech.
 - Exposes personal data without lawful basis.
@@ -275,6 +279,7 @@ Content is rejected or restricted if it:
 - Violates applicable laws or platform policies.
 
 Editorial actions may include:
+
 - Anonymisation or redaction of sensitive elements.
 - Contextual clarification.
 - Partial publication.
@@ -286,6 +291,7 @@ Editorial actions may include:
 JunkedOut actively prevents and mitigates coordinated manipulation, misuse, and hostile interference with platform processes.
 
 Prohibited behaviours include:
+
 - Coordinated submission campaigns intended to distort statistical outcomes.
 - Organised harassment or intimidation of individuals or organisations.
 - Commercial, political, or ideological interference with reporting processes.
@@ -293,6 +299,7 @@ Prohibited behaviours include:
 - Attempts to reverse-engineer moderation or scoring mechanisms for manipulation.
 
 Protective measures include:
+
 - Automated detection of anomalous activity patterns.
 - Human review of high-risk or high-impact submissions.
 - Progressive access controls and rate limitations.
@@ -300,6 +307,7 @@ Protective measures include:
 - Escalation procedures for complex or sensitive cases.
 
 Enforcement actions may include:
+
 - Warning notices.
 - Temporary restrictions.
 - Data exclusion from public datasets.
@@ -313,23 +321,27 @@ All enforcement actions are subject to documented review procedures and proporti
 JunkedOut is committed to preventing defamation, misrepresentation, and unjustified reputational harm while maintaining transparency and public accountability.
 
 Attribution and framing principles:
+
 - Published information reflects reported experiences and aggregated patterns, not verified legal findings.
 - Organizational profiles are based on multi-source, longitudinal data rather than isolated incidents.
 - All statistical indicators are presented with contextual explanations and methodological limitations.
 - Language is neutral, factual, and avoids value judgments or inflammatory characterisations.
 
 Identification and naming standards:
+
 - Organizations are identified only when sufficient validated data exists to support meaningful analysis.
 - Individual persons are not publicly named or profiled.
 - Personal identifiers are removed unless disclosure is legally required and justified.
 - Historical and contextual factors are considered in longitudinal assessments.
 
 Right to response and correction:
+
 - Organizations have access to structured mechanisms to submit clarifications, supporting documentation, and evidence of corrective actions.
 - Substantiated factual inaccuracies are corrected promptly and transparently.
 - Significant methodological or interpretative errors are publicly acknowledged.
 
 Takedown and dispute resolution:
+
 - Requests for content review or removal are evaluated under documented procedures.
 - Emergency takedown measures may be applied where serious legal risk, personal safety concerns, or clear rights violations are identified.
 - Disputes are resolved through evidence-based assessment and proportional remedial action.
@@ -345,6 +357,7 @@ JunkedOut applies strict data minimisation principles in accordance with applica
 The platform collects and processes only information that is necessary to fulfil its stated analytical, transparency, and governance objectives.
 
 By design, JunkedOut does not collect:
+
 - Government-issued personal identifiers.
 - Precise residential addresses.
 - Biometric or genetic data.
@@ -360,17 +373,20 @@ Unnecessary or obsolete data elements are removed or deprecated in a controlled 
 JunkedOut is designed to protect contributor identity through layered technical and organisational safeguards.
 
 Primary anonymity measures include:
+
 - Separation of submission content from access and system metadata.
 - Removal or transformation of direct personal identifiers prior to storage.
 - Normalisation of indirectly identifying attributes where feasible.
 - Controlled access to raw data by authorised personnel only.
 
 Pseudonymisation and internal handling:
+
 - Internal reference identifiers are used to support moderation, quality control, and follow-up procedures.
 - Mapping between identifiers and submission metadata is restricted and audited.
 - No public-facing profiles are created for individual contributors.
 
 Limitations and legal obligations:
+
 - Absolute anonymity cannot be guaranteed in all legal contexts.
 - Lawful requests from competent authorities may require limited data disclosure.
 - Technical and operational safeguards are continuously reviewed to minimise re-identification risks.
@@ -382,16 +398,19 @@ JunkedOut commits to transparency regarding its anonymity practices and limitati
 JunkedOut applies defined data retention schedules aligned with legal requirements, analytical needs, and risk management principles.
 
 Retention principles include:
+
 - Raw submissions and supporting materials are retained only for the period necessary for validation, moderation, and quality assurance.
 - Anonymised and aggregated datasets may be retained for longitudinal analysis and public interest research.
 - Moderation records and audit logs are retained in accordance with accountability and compliance obligations.
 
 Deletion and erasure mechanisms:
+
 - Contributors may request deletion or restriction of their submissions in accordance with applicable data protection laws.
 - Verified erasure requests are executed without undue delay and documented for audit purposes.
 - Technical processes ensure secure deletion and irreversible anonymisation where applicable.
 
 Archiving and review:
+
 - Periodic reviews assess data relevance, legal compliance, and storage risks.
 - Obsolete or redundant datasets are systematically removed or archived under controlled conditions.
 
@@ -400,6 +419,7 @@ Archiving and review:
 JunkedOut implements layered technical and organisational security measures to protect data integrity, confidentiality, and system availability.
 
 Core security principles include:
+
 - Principle of least privilege for all system access.
 - Segregation of environments and operational roles.
 - Encryption of sensitive data in transit and at rest.
@@ -407,17 +427,18 @@ Core security principles include:
 - Regular vulnerability assessment and dependency review.
 
 Access governance:
+
 - Role-based access controls aligned with operational responsibilities.
 - Multi-factor authentication for privileged accounts.
 - Periodic access reviews and credential rotation.
 
 Incident management:
+
 - Documented incident response and breach notification procedures.
 - Timely assessment, containment, and remediation of security events.
 - Post-incident review and system hardening.
 
-Security controls and practices are continuously reviewed in response to evolving threats and regulatory requirements.
----
+## Security controls and practices are continuously reviewed in response to evolving threats and regulatory requirements.
 
 ## 7. Open source strategy
 
@@ -615,8 +636,7 @@ To maintain focus and execution discipline, the following areas are intentionall
 - Unmoderated public discussion forums.
 - Expansion beyond recruitment and hiring transparency into unrelated labour or social policy domains.
 
-These areas may be reconsidered in future phases based on platform maturity, legal frameworks, and stakeholder engagement.
----
+## These areas may be reconsidered in future phases based on platform maturity, legal frameworks, and stakeholder engagement.
 
 ## 10. How to contribute (for volunteers)
 

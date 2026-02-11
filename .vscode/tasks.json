@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev: next",
+      "type": "shell",
+      "command": "npm run dev",
+      "group": "build",
+      "problemMatcher": [],
+      "isBackground": true
+    }
+  ]
+}

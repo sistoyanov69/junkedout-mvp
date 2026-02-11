@@ -84,8 +84,9 @@ export default function SubmitPage() {
       });
 
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || 'Submission error');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Submission error';
+      setError(message);
     } finally {
       setLoading(false);
     }

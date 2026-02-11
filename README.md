@@ -19,12 +19,14 @@ JunkedOut addresses this disconnect by collecting, validating, and analyzing rea
 ## What JunkedOut is (and is not)
 
 **JunkedOut is:**
+
 - A transparency and research platform
 - Evidence-driven and methodology-focused
 - Privacy-first and GDPR-aware
 - Open-source and founder-led
 
 **JunkedOut is not:**
+
 - A court, arbitration body, or legal authority
 - A harassment or public shaming platform
 - An unmoderated complaint board
@@ -34,11 +36,11 @@ JunkedOut addresses this disconnect by collecting, validating, and analyzing rea
 
 ## Key components
 
-- Structured, anonymized reporting of recruitment experiences  
-- Moderation and validation workflows  
-- Aggregated analytics and public indicators  
-- Privacy-preserving recruitment tools (identity-shielded hiring functionality)  
-- Open research access under controlled conditions  
+- Structured, anonymized reporting of recruitment experiences
+- Moderation and validation workflows
+- Aggregated analytics and public indicators
+- Privacy-preserving recruitment tools (identity-shielded hiring functionality)
+- Open research access under controlled conditions
 
 ---
 
@@ -65,10 +67,12 @@ For full details, see:
 Contributions are welcome from developers, data scientists, legal experts, researchers, and practitioners.
 
 Please start by reading:
+
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
 If you’re interested:
+
 - open an Issue
 - propose an improvement
 - or start a discussion
@@ -102,6 +106,7 @@ Current priorities include:
   - strengthening reliability before wider visibility or adoption
 
 To contribute, start by opening an Issue that:
+
 - identifies a concrete problem or gap
 - proposes an approach or design direction
 - highlights risks (privacy, security, abuse)

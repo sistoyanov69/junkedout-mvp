@@ -73,10 +73,11 @@ If you experience or witness behavior that violates this Code of Conduct, please
 
 ### Reporting channels:
 
-- **General concerns:** contact@junkedout.org  
-- **Security or sensitive issues:** security@junkedout.org  
+- **General concerns:** contact@junkedout.org
+- **Security or sensitive issues:** security@junkedout.org
 
 Reports should include, where possible:
+
 - A description of the incident.
 - Relevant context (links, timestamps, screenshots).
 - Any steps already taken.

@@ -5,8 +5,8 @@ export default function InsightsPage() {
         <header className="space-y-3">
           <h1 className="text-3xl md:text-4xl font-bold">Insights</h1>
           <p className="text-gray-300">
-            Early, aggregated signals from submitted hiring experiences. This is
-            a DEV view — content and metrics will evolve as data grows.
+            Early, aggregated signals from submitted hiring experiences. This is a DEV view —
+            content and metrics will evolve as data grows.
           </p>
         </header>
 
@@ -28,38 +28,30 @@ export default function InsightsPage() {
                 <tr className="border-b border-gray-900">
                   <td className="py-3 pr-4">Total submissions</td>
                   <td className="py-3 pr-4">—</td>
-                  <td className="py-3 text-gray-400">
-                    Will be computed from Supabase.
-                  </td>
+                  <td className="py-3 text-gray-400">Will be computed from Supabase.</td>
                 </tr>
                 <tr className="border-b border-gray-900">
                   <td className="py-3 pr-4">Top countries</td>
                   <td className="py-3 pr-4">—</td>
-                  <td className="py-3 text-gray-400">
-                    Will be computed from country field.
-                  </td>
+                  <td className="py-3 text-gray-400">Will be computed from country field.</td>
                 </tr>
                 <tr className="border-b border-gray-900">
                   <td className="py-3 pr-4">Top roles</td>
                   <td className="py-3 pr-4">—</td>
-                  <td className="py-3 text-gray-400">
-                    Will be computed from role field.
-                  </td>
+                  <td className="py-3 text-gray-400">Will be computed from role field.</td>
                 </tr>
                 <tr>
                   <td className="py-3 pr-4">Most reported patterns</td>
                   <td className="py-3 pr-4">—</td>
-                  <td className="py-3 text-gray-400">
-                    Later: classified tags + moderation.
-                  </td>
+                  <td className="py-3 text-gray-400">Later: classified tags + moderation.</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <p className="mt-4 text-xs text-gray-500">
-            Next: connect this page to real aggregates (counts + grouped stats)
-            from Supabase. No personal data will be shown.
+            Next: connect this page to real aggregates (counts + grouped stats) from Supabase. No
+            personal data will be shown.
           </p>
         </section>
       </div>

@@ -9,8 +9,8 @@ Instead, report it privately:
 - **Preferred:** GitHub private security advisory (Security tab → “Report a vulnerability”)
 - **Security contact:** security@junkedout.org
 
-
 Please include:
+
 - A clear description of the issue
 - Steps to reproduce (if possible)
 - Impact assessment (what an attacker could do)

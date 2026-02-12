@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/sistoyanov69/junkedout-mvp/discussions
+    about: Ask questions, propose ideas, and discuss architecture/governance.
+
+  - name: 🛡️ Security issues
+    url: https://github.com/sistoyanov69/junkedout-mvp/security/policy
+    about: Please report security vulnerabilities via the Security Policy, not via Issues.

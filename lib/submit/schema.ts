@@ -25,8 +25,19 @@ export const SubmitSchema = z
     schema_version: z.literal("report.v0").default("report.v0"),
 
     // consents
-    consent_terms: z.literal(true, { errorMap: () => ({ message: "You must confirm good-faith submission." }) }),
-    consent_no_pii: z.literal(true, { errorMap: () => ({ message: "You must confirm you did not include personal data in the narrative." }) }),
+    consent_terms: z
+      .boolean()
+      .refine((v) => v === true, {
+        message: "You must confirm good-faith submission.",
+      }),
+
+    consent_no_pii: z
+      .boolean()
+      .refine((v) => v === true, {
+        message:
+          "You must confirm you did not include personal data in the narrative.",
+      }),
+
     consent_followup: z.boolean().optional().default(false),
 
     // honeypot (should be empty)

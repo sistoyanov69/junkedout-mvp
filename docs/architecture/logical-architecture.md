@@ -8,38 +8,40 @@ It focuses on **domains, trust boundaries, responsibilities, and data flows**.
 ## 1) Platform Logical Architecture (Modules & Data Flows)
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryTextColor":"#0F172A","lineColor":"#6B7280","fontSize":"14px"}}}%%
 flowchart LR
-  %% Visual classes (GitHub-safe)
+  %% Visual classes (stable)
   classDef public fill:#E6F4EA,stroke:#2F855A,stroke-width:2px,color:#0F172A
   classDef restricted fill:#FEF3C7,stroke:#B45309,stroke-width:2px,color:#0F172A
   classDef governance fill:#E0E7FF,stroke:#4338CA,stroke-width:2px,color:#0F172A
   classDef security fill:#FEE2E2,stroke:#991B1B,stroke-width:2px,color:#0F172A
   classDef neutral fill:#F3F4F6,stroke:#6B7280,stroke-width:1.5px,color:#0F172A
+
   subgraph Z0["Public Zone (Read-only)"]
-    PUB_UI["Public Experience Layer\n- Employer pages\n- Published aggregates\n- Methodology & rule versions"]
-    PUB_SNAP["Publication Snapshots (Public Dataset)\n- Aggregated metrics\n- Context cards\n- Snapshot timestamps\n- Rule versions"]
-    EMP_PUB["Employer Canonical (Public Fields)\n- Legal name (verified)\n- Jurisdiction\n- Public identifiers"]
+    PUB_UI["Public Experience Layer\n- Employer pages\n- Published aggregates\n- Methodology & rule versions"]:::public
+    PUB_SNAP["Publication Snapshots (Public Dataset)\n- Aggregated metrics\n- Context cards\n- Snapshot timestamps\n- Rule versions"]:::public
+    EMP_PUB["Employer Canonical (Public Fields)\n- Legal name (verified)\n- Jurisdiction\n- Public identifiers"]:::public
   end
 
   subgraph Z1["Restricted Zone (Controlled Access)"]
-    INTAKE["Submission & Intake\n- Validation\n- Rate limits\n- Risk flags\n- Intake signals"]
-    DRAFT["Report Drafts (Restricted)\n- Structured answers\n- Free-text\n- Employer reference"]
-    EVID["Evidence Store (Restricted)\n- Evidence assets\n- Hashes\n- Redactions\n- Access logs"]
-    RESOLVE["Employer Identity Resolution\n- Reference → legal entity\n- Confidence\n- Approval if ambiguous"]
-    MOD["Moderation & Case Management\n- Triage\n- PII redaction\n- Evidence assessment\n- Accept / Reject / Hold"]
-    NORM["Normalized Reports (Restricted)\n- Extracted facts\n- Structured fields only"]
-    SCORE["Scoring & Aggregation Engine\n- Versioned rules\n- Weighting\n- Time windows\n- Uncertainty"]
-    PUB_MGR["Publication & Release Management\n- Threshold gating\n- Safety checks\n- Snapshot creation"]
+    INTAKE["Submission & Intake\n- Validation\n- Rate limits\n- Risk flags\n- Intake signals"]:::restricted
+    DRAFT["Report Drafts (Restricted)\n- Structured answers\n- Free-text\n- Employer reference"]:::restricted
+    EVID["Evidence Store (Restricted)\n- Evidence assets\n- Hashes\n- Redactions\n- Access logs"]:::restricted
+    RESOLVE["Employer Identity Resolution\n- Reference → legal entity\n- Confidence\n- Approval if ambiguous"]:::restricted
+    MOD["Moderation & Case Management\n- Triage\n- PII redaction\n- Evidence assessment\n- Accept / Reject / Hold"]:::restricted
+    NORM["Normalized Reports (Restricted)\n- Extracted facts\n- Structured fields only"]:::restricted
+    SCORE["Scoring & Aggregation Engine\n- Versioned rules\n- Weighting\n- Time windows\n- Uncertainty"]:::restricted
+    PUB_MGR["Publication & Release Management\n- Threshold gating\n- Safety checks\n- Snapshot creation"]:::restricted
   end
 
   subgraph Z2["Governance, Compliance & Security"]
-    GOV["Governance & Policy\n- Versioned policies\n- Decision logs\n- Role definitions"]
-    PRIV["Privacy & GDPR Ops\n- Classification\n- Retention\n- DSAR handling"]
-    SEC["Security & Audit\n- RBAC/ABAC\n- Tamper-evident logs\n- Monitoring"]
-    AUDIT["Audit Event Stream\n- Moderation actions\n- Evidence access\n- Publication approvals"]
+    GOV["Governance & Policy\n- Versioned policies\n- Decision logs\n- Role definitions"]:::governance
+    PRIV["Privacy & GDPR Ops\n- Classification\n- Retention\n- DSAR handling"]:::governance
+    SEC["Security & Audit\n- RBAC/ABAC\n- Tamper-evident logs\n- Monitoring"]:::security
+    AUDIT["Audit Event Stream\n- Moderation actions\n- Evidence access\n- Publication approvals"]:::security
   end
 
-  USER["Reporter"] --> INTAKE
+  USER["Reporter"]:::neutral --> INTAKE
   INTAKE --> DRAFT
   INTAKE --> EVID
   INTAKE --> MOD
@@ -77,13 +79,6 @@ flowchart LR
   SCORE --> AUDIT
   PUB_MGR --> AUDIT
   EVID --> AUDIT
-
-  %% Class assignments
-  class PUB_UI,PUB_SNAP,EMP_PUB public
-  class INTAKE,DRAFT,EVID,RESOLVE,MOD,NORM,SCORE,PUB_MGR restricted
-  class GOV,PRIV governance
-  class SEC,AUDIT security
-  class USER neutral
 ```
 
 ---
@@ -91,36 +86,32 @@ flowchart LR
 ## 2) Data Classification Boundaries
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryTextColor":"#0F172A","lineColor":"#6B7280","fontSize":"14px"}}}%%
 flowchart TB
-  %% Visual classes (GitHub-safe)
   classDef public fill:#E6F4EA,stroke:#2F855A,stroke-width:2px,color:#0F172A
   classDef restricted fill:#FEF3C7,stroke:#B45309,stroke-width:2px,color:#0F172A
-  classDef high fill:#FEE2E2,stroke:#991B1B,stroke-width:2px,color:#0F172A
+  classDef highrisk fill:#FEE2E2,stroke:#991B1B,stroke-width:2px,color:#0F172A
+
   subgraph PUBLIC["PUBLIC"]
-    P1["Publication Snapshots\n- Aggregated metrics\n- Context summaries\n- Rule versions"]
-    P2["Employer Canonical (Public Fields)\n- Legal name\n- Jurisdiction"]
+    P1["Publication Snapshots\n- Aggregated metrics\n- Context summaries\n- Rule versions"]:::public
+    P2["Employer Canonical (Public Fields)\n- Legal name\n- Jurisdiction"]:::public
   end
 
   subgraph RESTRICTED["RESTRICTED"]
-    R1["ReportDraft\n- Submitted content"]
-    R2["ReportNormalized\n- Moderated structured facts"]
-    R3["ModerationCase\n- Decisions & rationale"]
-    R4["EmployerResolution\n- Matching & confidence"]
+    R1["ReportDraft\n- Submitted content"]:::restricted
+    R2["ReportNormalized\n- Moderated structured facts"]:::restricted
+    R3["ModerationCase\n- Decisions & rationale"]:::restricted
+    R4["EmployerResolution\n- Matching & confidence"]:::restricted
   end
 
   subgraph HIGH["HIGHLY RESTRICTED"]
-    H1["Reporter PII"]
-    H2["Raw Evidence (Pre-redaction)"]
+    H1["Reporter PII"]:::highrisk
+    H2["Raw Evidence (Pre-redaction)"]:::highrisk
   end
 
   R1 --> R2 --> P1
   R4 --> P2
   H2 --> R2
-
-  %% Class assignments
-  class P1,P2 public
-  class R1,R2,R3,R4 restricted
-  class H1,H2 high
 ```
 
 ---
@@ -128,6 +119,7 @@ flowchart TB
 ## 3) Submission → Publication Lifecycle
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryTextColor":"#0F172A","lineColor":"#6B7280","fontSize":"14px","actorBkg":"#FEF3C7","actorBorder":"#B45309","actorTextColor":"#0F172A","signalColor":"#6B7280","signalTextColor":"#0F172A","activationBkgColor":"#E5E7EB","activationBorderColor":"#6B7280"}}}%%
 sequenceDiagram
   autonumber
   actor U as Reporter

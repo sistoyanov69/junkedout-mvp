@@ -9,6 +9,12 @@ It focuses on **domains, trust boundaries, responsibilities, and data flows**.
 
 ```mermaid
 flowchart LR
+  %% Visual classes (GitHub-safe)
+  classDef public fill:#E6F4EA,stroke:#2F855A,stroke-width:2px,color:#0F172A
+  classDef restricted fill:#FEF3C7,stroke:#B45309,stroke-width:2px,color:#0F172A
+  classDef governance fill:#E0E7FF,stroke:#4338CA,stroke-width:2px,color:#0F172A
+  classDef security fill:#FEE2E2,stroke:#991B1B,stroke-width:2px,color:#0F172A
+  classDef neutral fill:#F3F4F6,stroke:#6B7280,stroke-width:1.5px,color:#0F172A
   subgraph Z0["Public Zone (Read-only)"]
     PUB_UI["Public Experience Layer\n- Employer pages\n- Published aggregates\n- Methodology & rule versions"]
     PUB_SNAP["Publication Snapshots (Public Dataset)\n- Aggregated metrics\n- Context cards\n- Snapshot timestamps\n- Rule versions"]
@@ -71,6 +77,13 @@ flowchart LR
   SCORE --> AUDIT
   PUB_MGR --> AUDIT
   EVID --> AUDIT
+
+  %% Class assignments
+  class PUB_UI,PUB_SNAP,EMP_PUB public
+  class INTAKE,DRAFT,EVID,RESOLVE,MOD,NORM,SCORE,PUB_MGR restricted
+  class GOV,PRIV governance
+  class SEC,AUDIT security
+  class USER neutral
 ```
 
 ---
@@ -79,6 +92,10 @@ flowchart LR
 
 ```mermaid
 flowchart TB
+  %% Visual classes (GitHub-safe)
+  classDef public fill:#E6F4EA,stroke:#2F855A,stroke-width:2px,color:#0F172A
+  classDef restricted fill:#FEF3C7,stroke:#B45309,stroke-width:2px,color:#0F172A
+  classDef high fill:#FEE2E2,stroke:#991B1B,stroke-width:2px,color:#0F172A
   subgraph PUBLIC["PUBLIC"]
     P1["Publication Snapshots\n- Aggregated metrics\n- Context summaries\n- Rule versions"]
     P2["Employer Canonical (Public Fields)\n- Legal name\n- Jurisdiction"]
@@ -99,6 +116,11 @@ flowchart TB
   R1 --> R2 --> P1
   R4 --> P2
   H2 --> R2
+
+  %% Class assignments
+  class P1,P2 public
+  class R1,R2,R3,R4 restricted
+  class H1,H2 high
 ```
 
 ---

@@ -1,5 +1,7 @@
 // app/page.tsx
 import Link from 'next/link';
+import EUContextCarousel from "@/components/EUContextCarousel";
+import { euContextItems } from "@/content/eu-context";
 
 export default function Home() {
   return (
@@ -216,6 +218,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+<EUContextCarousel items={euContextItems} />
 
       {/* Latest experiences preview (static placeholder for now) */}
       <section className="mx-auto max-w-6xl px-6 pb-14">

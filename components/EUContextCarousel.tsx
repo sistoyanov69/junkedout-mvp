@@ -15,20 +15,40 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
-function getLink(it: EUContextItem): string {
-  // Support either `href` or `url` depending on the content schema.
-  if ("href" in it && typeof it.href === "string") return it.href;
-  if ("url" in it && typeof it.url === "string") return it.url;
-  return "";
+function mod(n: number, m: number) {
+  return ((n % m) + m) % m;
+}
+
+function getProp(it: EUContextItem, key: string): unknown {
+  return (it as unknown as Record<string, unknown>)[key];
 }
 
 function getText(it: EUContextItem, key: string): string {
-  if (key in it) {
-    const v = (it as unknown as Record<string, unknown>)[key];
-    if (typeof v === "string") return v;
-    if (typeof v === "number") return String(v);
-  }
+  const v = getProp(it, key);
+  if (typeof v === "string") return v;
+  if (typeof v === "number") return String(v);
   return "";
+}
+
+function getLink(it: EUContextItem): string {
+  const href = getProp(it, "href");
+  if (typeof href === "string" && href.trim()) return href.trim();
+
+  const url = getProp(it, "url");
+  if (typeof url === "string" && url.trim()) return url.trim();
+
+  const link = getProp(it, "link");
+  if (typeof link === "string" && link.trim()) return link.trim();
+
+  return "";
+}
+
+function initialVisible(): number {
+  if (typeof window === "undefined") return 3;
+  const w = window.innerWidth;
+  if (w >= 1024) return 3;
+  if (w >= 768) return 2;
+  return 1;
 }
 
 export default function EUContextCarousel({
@@ -40,48 +60,59 @@ export default function EUContextCarousel({
   const safeItems = useMemo(() => (items ?? []).filter(Boolean), [items]);
   const total = safeItems.length;
 
-  const [visible, setVisible] = useState(3);
-  const [index, setIndex] = useState(0);
+  // No setState-in-effect: compute initial value from window, then only update via resize callbacks.
+  const [visible, setVisible] = useState<number>(initialVisible);
+  const [index, setIndex] = useState<number>(0);
 
   const hoveringRef = useRef(false);
 
-  useEffect(() => {
-    if (total <= 0) return;
-    setIndex((i) => clamp(i, 0, Math.max(0, total - 1)));
-  }, [total]);
+  // Clamp at read-time (no "repair state" effect)
+  const maxIndex = Math.max(0, total - 1);
+  const indexSafe = useMemo(() => clamp(index, 0, maxIndex), [index, maxIndex]);
 
+  // Resize subscription (setState only in callback)
   useEffect(() => {
-    const update = () => {
+    const onResize = () => {
       const w = window.innerWidth;
-      if (w >= 1024) setVisible(3);
-      else if (w >= 768) setVisible(2);
-      else setVisible(1);
+      const next = w >= 1024 ? 3 : w >= 768 ? 2 : 1;
+      setVisible((prev) => (prev === next ? prev : next));
     };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // Autoplay (setState only in interval callback)
   useEffect(() => {
     if (total <= 1) return;
+
     const t = window.setInterval(() => {
       if (hoveringRef.current) return;
-      setIndex((i) => (i + 1) % total);
+      setIndex((i) => mod(i + 1, total));
     }, autoplayMs);
+
     return () => window.clearInterval(t);
   }, [autoplayMs, total]);
 
   const go = (i: number) => {
     if (total <= 0) return;
-    const next = ((i % total) + total) % total;
-    setIndex(next);
+    setIndex(mod(i, total));
   };
 
-  const prev = () => go(index - 1);
-  const next = () => go(index + 1);
+  const prev = () => {
+    if (total <= 0) return;
+    setIndex((i) => mod(i - 1, total));
+  };
+
+  const next = () => {
+    if (total <= 0) return;
+    setIndex((i) => mod(i + 1, total));
+  };
 
   const slideW = 100 / Math.max(1, visible);
-  const translatePct = index * slideW;
+  const translatePct = indexSafe * slideW;
+
+  if (total === 0) return null;
 
   return (
     <section
@@ -92,6 +123,7 @@ export default function EUContextCarousel({
       onMouseLeave={() => {
         hoveringRef.current = false;
       }}
+      aria-label="EU Context carousel"
     >
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
@@ -101,7 +133,7 @@ export default function EUContextCarousel({
 
         <div className="flex items-center gap-2">
           <div className="hidden text-xs text-[#9AA3B2] sm:block">
-            {total > 0 ? `${index + 1} / ${total}` : "—"}
+            {total > 0 ? `${indexSafe + 1} / ${total}` : "—"}
           </div>
 
           <button
@@ -133,15 +165,18 @@ export default function EUContextCarousel({
           >
             {safeItems.map((it, i) => {
               const link = getLink(it);
-              const t = getText(it, "title");
-              const summary = getText(it, "summary");
+              const titleText = getText(it, "title") || "EU publication";
+              const summary =
+                getText(it, "summary") ||
+                getText(it, "description") ||
+                getText(it, "excerpt");
               const year = getText(it, "year");
-              const source = getText(it, "source");
+              const source = getText(it, "source") || getText(it, "org") || "European Union";
               const tag = getText(it, "tag");
 
               return (
                 <div
-                  key={`${link || "item"}-${i}`}
+                  key={`${link || titleText}-${i}`}
                   className="shrink-0 px-2"
                   style={{ width: `${slideW}%` }}
                 >
@@ -157,7 +192,8 @@ export default function EUContextCarousel({
                             EU Guidance
                           </div>
                           <div className="text-[12px] text-[#9AA3B2]">
-                            {(source || "European Union") + (year ? ` • ${year}` : "")}
+                            {source}
+                            {year ? ` • ${year}` : ""}
                           </div>
                         </div>
                       </div>
@@ -170,12 +206,18 @@ export default function EUContextCarousel({
                     </div>
 
                     <h3 className="mt-4 line-clamp-2 text-lg font-semibold leading-snug text-[#E6E8EB]">
-                      {t}
+                      {titleText}
                     </h3>
 
-                    <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-[#9AA3B2]">
-                      {summary}
-                    </p>
+                    {summary ? (
+                      <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-[#9AA3B2]">
+                        {summary}
+                      </p>
+                    ) : (
+                      <p className="mt-3 text-sm text-[#6F7A8C]">
+                        (No summary available in the content list yet.)
+                      </p>
+                    )}
 
                     <div className="mt-5">
                       {link ? (
@@ -200,7 +242,7 @@ export default function EUContextCarousel({
 
         <div className="mt-4 flex items-center justify-center gap-2">
           {Array.from({ length: total }).map((_, i) => {
-            const active = i === index;
+            const active = i === indexSafe;
             return (
               <button
                 key={`dot-${i}`}

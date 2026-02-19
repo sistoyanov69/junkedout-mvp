@@ -1,146 +1,160 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { EUContextItem } from "@/content/eu-context";
+import Image from 'next/image';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+type AnyItem = Record<string, unknown>;
 
 type Props = {
-  items: EUContextItem[];
+  items: ReadonlyArray<AnyItem>;
   title?: string;
   subtitle?: string;
+  /** autoplay interval in ms (set 0 to disable) */
   autoplayMs?: number;
 };
 
 function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
+  return Math.min(Math.max(n, min), max);
 }
 
-function mod(n: number, m: number) {
-  return ((n % m) + m) % m;
+function asString(v: unknown): string | undefined {
+  return typeof v === 'string' ? v : undefined;
 }
 
-function getProp(it: EUContextItem, key: string): unknown {
-  return (it as unknown as Record<string, unknown>)[key];
+function asNumberLike(v: unknown): string | undefined {
+  if (typeof v === 'number') return String(v);
+  if (typeof v === 'string' && v.trim().length > 0) return v;
+  return undefined;
 }
 
-function getText(it: EUContextItem, key: string): string {
-  const v = getProp(it, key);
-  if (typeof v === "string") return v;
-  if (typeof v === "number") return String(v);
-  return "";
+function pickUrl(it: AnyItem): string | undefined {
+  // Support multiple shapes: url | href | link
+  return asString(it.url) ?? asString(it.href) ?? asString(it.link);
 }
 
-function getLink(it: EUContextItem): string {
-  const href = getProp(it, "href");
-  if (typeof href === "string" && href.trim()) return href.trim();
-
-  const url = getProp(it, "url");
-  if (typeof url === "string" && url.trim()) return url.trim();
-
-  const link = getProp(it, "link");
-  if (typeof link === "string" && link.trim()) return link.trim();
-
-  return "";
+function pickTitle(it: AnyItem): string {
+  return (
+    asString(it.title) ??
+    asString(it.name) ??
+    asString(it.heading) ??
+    'EU publication'
+  );
 }
 
-function initialVisible(): number {
-  if (typeof window === "undefined") return 3;
-  const w = window.innerWidth;
-  if (w >= 1024) return 3;
-  if (w >= 768) return 2;
-  return 1;
+function pickSummary(it: AnyItem): string {
+  return (
+    asString(it.summary) ??
+    asString(it.description) ??
+    asString(it.excerpt) ??
+    ''
+  );
+}
+
+function pickOrg(it: AnyItem): string {
+  return asString(it.org) ?? asString(it.source) ?? 'European Commission';
+}
+
+function pickTag(it: AnyItem): string | undefined {
+  return asString(it.tag) ?? asString(it.topic) ?? asString(it.category);
 }
 
 export default function EUContextCarousel({
   items,
-  title = "EU Context We Build Upon",
-  subtitle = "Selected official EU materials that shape our design and policy alignment.",
+  title = 'EU Context We Build Upon',
+  subtitle = 'Selected official EU materials that shape our design and policy alignment.',
   autoplayMs = 6500,
 }: Props) {
-  const safeItems = useMemo(() => (items ?? []).filter(Boolean), [items]);
-  const total = safeItems.length;
+  const total = items.length;
 
-  // No setState-in-effect: compute initial value from window, then only update via resize callbacks.
-  const [visible, setVisible] = useState<number>(initialVisible);
-  const [index, setIndex] = useState<number>(0);
+  // We slide one card at a time; visible cards is responsive via CSS widths:
+  // - mobile: 1 card (w-full)
+  // - md+:    3 cards (md:w-1/3)
+  const visible = 3;
+  const maxIndex = Math.max(0, total - visible);
 
-  const hoveringRef = useRef(false);
-
-  // Clamp at read-time (no "repair state" effect)
-  const maxIndex = Math.max(0, total - 1);
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const indexSafe = useMemo(() => clamp(index, 0, maxIndex), [index, maxIndex]);
 
-  // Resize subscription (setState only in callback)
+  // Keep state in range WITHOUT setState-in-effect (lint rule)
+  // If index is out of range, we clamp in the render value and also
+  // correct it lazily on interaction/autoplay.
+  const goTo = (next: number) => setIndex(clamp(next, 0, maxIndex));
+  const prev = () => goTo(indexSafe - 1);
+  const next = () => goTo(indexSafe + 1);
+
+  const pages = Math.max(1, maxIndex + 1);
+  const page = clamp(indexSafe + 1, 1, pages);
+
+  const intervalRef = useRef<number | null>(null);
+
   useEffect(() => {
-    const onResize = () => {
-      const w = window.innerWidth;
-      const next = w >= 1024 ? 3 : w >= 768 ? 2 : 1;
-      setVisible((prev) => (prev === next ? prev : next));
-    };
+    if (!autoplayMs || autoplayMs <= 0) return;
+    if (paused) return;
+    if (total <= visible) return;
 
-    window.addEventListener("resize", onResize, { passive: true });
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  // Autoplay (setState only in interval callback)
-  useEffect(() => {
-    if (total <= 1) return;
-
-    const t = window.setInterval(() => {
-      if (hoveringRef.current) return;
-      setIndex((i) => mod(i + 1, total));
+    // window.setInterval returns number in the browser
+    intervalRef.current = window.setInterval(() => {
+      setIndex((cur) => {
+        const curSafe = clamp(cur, 0, maxIndex);
+        const nxt = curSafe + 1;
+        return nxt > maxIndex ? 0 : nxt;
+      });
     }, autoplayMs);
 
-    return () => window.clearInterval(t);
-  }, [autoplayMs, total]);
+    return () => {
+      if (intervalRef.current !== null) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [autoplayMs, paused, total, maxIndex]);
 
-  const go = (i: number) => {
-    if (total <= 0) return;
-    setIndex(mod(i, total));
-  };
+  // Translation is based on 1-card step; on md+ each card is 1/3 width, so step = 33.333%
+  const stepPct = 100 / visible;
+  const translateX = -(indexSafe * stepPct);
 
-  const prev = () => {
-    if (total <= 0) return;
-    setIndex((i) => mod(i - 1, total));
-  };
+  // Render only valid-ish items
+  const safeItems = useMemo(() => {
+    return items
+      .map((it) => ({
+        raw: it,
+        url: pickUrl(it),
+        title: pickTitle(it),
+        summary: pickSummary(it),
+        org: pickOrg(it),
+        year: asNumberLike(it.year),
+        tag: pickTag(it),
+      }))
+      .filter((it) => Boolean(it.url)); // require URL to be useful
+  }, [items]);
 
-  const next = () => {
-    if (total <= 0) return;
-    setIndex((i) => mod(i + 1, total));
-  };
-
-  const slideW = 100 / Math.max(1, visible);
-  const translatePct = indexSafe * slideW;
-
-  if (total === 0) return null;
+  if (safeItems.length === 0) return null;
 
   return (
     <section
-      className="mx-auto w-full max-w-6xl px-6 pb-10"
-      onMouseEnter={() => {
-        hoveringRef.current = true;
-      }}
-      onMouseLeave={() => {
-        hoveringRef.current = false;
-      }}
-      aria-label="EU Context carousel"
+      className="mx-auto max-w-6xl px-6 pb-14 pt-10"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      aria-label="EU context carousel"
     >
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-          <p className="mt-2 text-sm text-[#9AA3B2]">{subtitle}</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-white">
+            {title}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-[#9AA3B2]">{subtitle}</p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden text-xs text-[#9AA3B2] sm:block">
-            {total > 0 ? `${indexSafe + 1} / ${total}` : "—"}
+        <div className="flex items-center gap-3">
+          <div className="text-xs text-[#9AA3B2]">
+            {page} / {pages}
           </div>
-
           <button
             type="button"
             onClick={prev}
-            disabled={total <= 1}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#2A3142] bg-[#141821] text-[#E6E8EB] transition hover:bg-[#1B2130] disabled:opacity-40"
+            disabled={total <= visible}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#2A3142] bg-[#111827] text-white hover:bg-[#0F172A] disabled:opacity-40"
             aria-label="Previous"
           >
             ‹
@@ -148,8 +162,8 @@ export default function EUContextCarousel({
           <button
             type="button"
             onClick={next}
-            disabled={total <= 1}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#2A3142] bg-[#141821] text-[#E6E8EB] transition hover:bg-[#1B2130] disabled:opacity-40"
+            disabled={total <= visible}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[#2A3142] bg-[#111827] text-white hover:bg-[#0F172A] disabled:opacity-40"
             aria-label="Next"
           >
             ›
@@ -157,110 +171,103 @@ export default function EUContextCarousel({
         </div>
       </div>
 
-      <div className="rounded-xl border border-[#2A3142] bg-[#0F131A] p-4">
+      {/* Same “block” feel as your upper section: full width, bordered panel */}
+      <div className="mt-6 rounded-2xl border border-[#2A3142] bg-[#0B1220]/60 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
         <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${translatePct}%)` }}
+            style={{ transform: `translateX(${translateX}%)` }}
           >
-            {safeItems.map((it, i) => {
-              const link = getLink(it);
-              const titleText = getText(it, "title") || "EU publication";
-              const summary =
-                getText(it, "summary") ||
-                getText(it, "description") ||
-                getText(it, "excerpt");
-              const year = getText(it, "year");
-              const source = getText(it, "source") || getText(it, "org") || "European Union";
-              const tag = getText(it, "tag");
-
-              return (
-                <div
-                  key={`${link || titleText}-${i}`}
-                  className="shrink-0 px-2"
-                  style={{ width: `${slideW}%` }}
-                >
-                  <article className="h-full rounded-xl border border-[#2A3142] bg-[#141821] p-5 shadow-sm">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#2A3142] bg-[#0F131A]">
-                          <Image src="/icons/eu.svg" alt="EU" width={22} height={22} />
+            {safeItems.map((it, i) => (
+              <div
+                key={`${it.url ?? 'eu'}-${i}`}
+                className="shrink-0 px-2 w-full md:w-1/3"
+              >
+                {/* Credit-card-ish ratio: taller than the old tiny cards */}
+                <article className="h-full min-h-[260px] rounded-2xl border border-[#2A3142] bg-[#0E1726] p-5 hover:bg-[#0F1A2B] transition">
+                  <header className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="grid h-10 w-10 place-items-center rounded-lg border border-[#2A3142] bg-[#0B1220]">
+                        <Image
+                          src="/icons/eu.svg"
+                          alt="EU"
+                          width={18}
+                          height={18}
+                        />
+                      </div>
+                      <div className="leading-tight">
+                        <div className="text-[11px] uppercase tracking-wide text-[#9AA3B2]">
+                          EU Guidance
                         </div>
-
-                        <div className="leading-tight">
-                          <div className="text-[11px] uppercase tracking-wide text-[#9AA3B2]">
-                            EU Guidance
-                          </div>
-                          <div className="text-[12px] text-[#9AA3B2]">
-                            {source}
-                            {year ? ` • ${year}` : ""}
-                          </div>
+                        <div className="text-[12px] text-[#9AA3B2]">
+                          {it.org}
+                          {it.year ? ` • ${it.year}` : ''}
                         </div>
                       </div>
-
-                      {tag ? (
-                        <span className="rounded-full border border-[#2A3142] bg-[#0F131A] px-2.5 py-1 text-[12px] text-[#E6E8EB]">
-                          {tag}
-                        </span>
-                      ) : null}
                     </div>
 
-                    <h3 className="mt-4 line-clamp-2 text-lg font-semibold leading-snug text-[#E6E8EB]">
-                      {titleText}
-                    </h3>
+                    {it.tag ? (
+                      <span className="rounded-full border border-[#2A3142] bg-[#0B1220] px-3 py-1 text-xs text-[#E6E8EB]">
+                        {it.tag}
+                      </span>
+                    ) : null}
+                  </header>
 
-                    {summary ? (
-                      <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-[#9AA3B2]">
-                        {summary}
-                      </p>
-                    ) : (
-                      <p className="mt-3 text-sm text-[#6F7A8C]">
-                        (No summary available in the content list yet.)
-                      </p>
-                    )}
+                  <h3 className="mt-5 line-clamp-2 text-lg font-semibold text-white">
+                    {it.title}
+                  </h3>
 
-                    <div className="mt-5">
-                      {link ? (
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-2 text-sm font-semibold text-[#93C5FD] hover:underline"
-                        >
-                          Read original <span aria-hidden>→</span>
-                        </a>
-                      ) : (
-                        <span className="text-sm text-[#6F7A8C]">No link provided</span>
-                      )}
-                    </div>
-                  </article>
-                </div>
-              );
-            })}
+                  {it.summary ? (
+                    <p className="mt-3 line-clamp-4 text-sm text-[#9AA3B2]">
+                      {it.summary}
+                    </p>
+                  ) : (
+                    <p className="mt-3 text-sm text-[#9AA3B2]">
+                      Official EU material relevant to anti-discrimination, labour
+                      market fairness, and evidence-based policy.
+                    </p>
+                  )}
+
+                  <div className="mt-6">
+                    <a
+                      href={it.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-[#93C5FD] hover:underline"
+                    >
+                      Read original <span aria-hidden>→</span>
+                    </a>
+                  </div>
+                </article>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-center gap-2">
-          {Array.from({ length: total }).map((_, i) => {
+        {/* Dots */}
+        <div className="mt-5 flex items-center justify-center gap-2">
+          {Array.from({ length: pages }).map((_, i) => {
             const active = i === indexSafe;
             return (
               <button
-                key={`dot-${i}`}
+                key={i}
                 type="button"
-                onClick={() => go(i)}
-                className={`h-2.5 w-2.5 rounded-full border transition ${
+                onClick={() => goTo(i)}
+                className={[
+                  'h-2.5 w-2.5 rounded-full border',
                   active
-                    ? "border-[#93C5FD] bg-[#93C5FD]"
-                    : "border-[#2A3142] bg-[#0F131A] hover:bg-[#1B2130]"
-                }`}
-                aria-label={`Go to item ${i + 1}`}
+                    ? 'border-[#93C5FD] bg-[#93C5FD]/80'
+                    : 'border-[#2A3142] bg-transparent hover:bg-white/10',
+                ].join(' ')}
+                aria-label={`Go to ${i + 1}`}
               />
             );
           })}
         </div>
 
-        <p className="mt-4 text-xs text-[#6F7A8C]">
-          External links lead to official EU publications. Summaries are provided by JunkedOut for context.
+        <p className="mt-4 text-xs text-[#6B7280]">
+          External links lead to official EU publications. Summaries are provided by
+          JunkedOut for context.
         </p>
       </div>
     </section>

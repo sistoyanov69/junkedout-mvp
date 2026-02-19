@@ -219,22 +219,7 @@ export default function Home() {
         </div>
       </section>
 
-<div className="max-w-7xl mx-auto px-4">
-  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-    {/* Left column – reserved */}
-    <aside className="hidden lg:block lg:col-span-3" />
-
-    {/* Center column – carousel */}
-    <main className="lg:col-span-6">
-      <EUContextCarousel items={euContextItems} />
-    </main>
-
-    {/* Right column – reserved */}
-    <aside className="hidden lg:block lg:col-span-3" />
-
-  </div>
-</div>
+       <EUContextCarousel items={euContextItems} />
 
       {/* Latest experiences preview (static placeholder for now) */}
       <section className="mx-auto max-w-6xl px-6 pb-14">

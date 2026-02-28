@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
+import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 
 type Citation = {
   label: string;
@@ -20,7 +20,8 @@ export default function RagTestPage() {
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    supabaseBrowser.auth.getUser().then(({ data, error }) => {
+    const supabase = getSupabaseBrowser();
+    supabase.auth.getUser().then(({ data, error }) => {
       if (error || !data.user) {
         setError("You must be logged in to use this page.");
         return;

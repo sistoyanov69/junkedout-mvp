@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import { useState } from "react";
+import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,10 +16,9 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // Lazy-load Supabase browser client at runtime (prevents build-time env access)
-      const { supabaseBrowser } = await import("@/lib/supabaseBrowser");
+      const supabase = getSupabaseBrowser();
 
-      const { error } = await supabaseBrowser.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });

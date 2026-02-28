@@ -5,6 +5,14 @@ export const runtime = "nodejs";
 
 const openai = new OpenAI();
 
+type RagMatchRow = {
+  chunk_id: string;
+  document_id: string;
+  chunk_index: number;
+  content: string;
+  similarity: number;
+};
+
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as {
@@ -48,9 +56,11 @@ export async function POST(req: Request) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
+    const rows = (data ?? []) as RagMatchRow[];
+
     return Response.json({
       ok: true,
-      results: (data ?? []).map((r: any) => ({
+      results: rows.map((r) => ({
         chunk_id: r.chunk_id,
         document_id: r.document_id,
         chunk_index: r.chunk_index,

@@ -3,8 +3,6 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const runtime = "nodejs";
 
-const openai = new OpenAI();
-
 type RagMatchRow = {
   chunk_id: string;
   document_id: string;
@@ -14,6 +12,8 @@ type RagMatchRow = {
 };
 
 export async function POST(req: Request) {
+  const openai = new OpenAI();
+  
   try {
     const body = (await req.json()) as {
       owner_id: string;

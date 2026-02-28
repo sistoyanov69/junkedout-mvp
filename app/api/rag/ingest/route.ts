@@ -3,8 +3,6 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const runtime = "nodejs";
 
-const openai = new OpenAI(); // uses OPENAI_API_KEY from env :contentReference[oaicite:2]{index=2}
-
 // Simple, deterministic chunking (MVP): fixed char window + overlap.
 function chunkText(text: string, chunkSize = 1200, overlap = 200): string[] {
   const clean = text.replace(/\r\n/g, "\n").trim();
@@ -33,6 +31,8 @@ function chunkText(text: string, chunkSize = 1200, overlap = 200): string[] {
 }
 
 export async function POST(req: Request) {
+  const openai = new OpenAI(); // uses OPENAI_API_KEY from env :contentReference[oaicite:2]{index=2}
+  
   try {
     const body = (await req.json()) as {
       owner_id: string; // auth.users.id (uuid)

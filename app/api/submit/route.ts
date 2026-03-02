@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import crypto from "crypto";
-import { z } from "zod";
-import { supabaseAdmin } from "@/lib/supabase/server";
-import { SubmitSchema } from "@/lib/submit/schema";
+import { NextResponse } from 'next/server';
+import crypto from 'crypto';
+import { z } from 'zod';
+import { supabaseAdmin } from '@/lib/supabase/server';
+import { SubmitSchema } from '@/lib/submit/schema';
 
 function sha256Hex(input: string) {
-  return crypto.createHash("sha256").update(input).digest("hex");
+  return crypto.createHash('sha256').update(input).digest('hex');
 }
 
 function randomToken(bytes = 32) {
-  return crypto.randomBytes(bytes).toString("hex");
+  return crypto.randomBytes(bytes).toString('hex');
 }
 
 // very lightweight PII heuristics (v0)
@@ -24,24 +24,26 @@ function detectPII(text: string): boolean {
  * Anything unmapped falls under "_form".
  */
 const FIELD_MAP: Record<string, string> = {
-  employer_legal_name: "company",
-  employer_country: "country",
-  job_title: "role",
-  narrative: "happened",
-  evidence_notes: "evidence",
-  contact_email: "email",
-  consent_terms: "consentTruthful",
-  consent_no_pii: "consentNoPII",
+  employer_legal_name: 'company',
+  employer_country: 'country',
+  employer_identifier_type: 'employerIdType',
+  employer_identifier_value: 'employerIdValue',
+  job_title: 'role',
+  narrative: 'happened',
+  evidence_notes: 'evidence',
+  contact_email: 'email',
+  consent_terms: 'consentTruthful',
+  consent_no_pii: 'consentNoPII',
 };
 
 function zodToFieldErrors(error: z.ZodError) {
   const out: Record<string, string[]> = {};
 
   for (const issue of error.issues) {
-    const rawKey = String(issue.path?.[0] ?? "_form");
-    const uiKey = FIELD_MAP[rawKey] ?? "_form";
+    const rawKey = String(issue.path?.[0] ?? '_form');
+    const uiKey = FIELD_MAP[rawKey] ?? '_form';
     if (!out[uiKey]) out[uiKey] = [];
-    out[uiKey].push(issue.message || "Invalid value.");
+    out[uiKey].push(issue.message || 'Invalid value.');
   }
 
   // de-dupe
@@ -61,8 +63,8 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           ok: false,
-          error: "ValidationError",
-          message: "Please correct the highlighted fields.",
+          error: 'ValidationError',
+          message: 'Please correct the highlighted fields.',
           fieldErrors: zodToFieldErrors(parsed.error),
         },
         { status: 422 }
@@ -72,7 +74,7 @@ export async function POST(req: Request) {
     const data = parsed.data;
 
     // honeypot check (bots often fill it)
-    if (data.hp && data.hp.trim() !== "") {
+    if (data.hp && data.hp.trim() !== '') {
       // pretend success, but do not store anything
       return NextResponse.json({ ok: true }, { status: 200 });
     }
@@ -81,7 +83,7 @@ export async function POST(req: Request) {
 
     // 1) Insert employer_ref
     const { data: employer, error: empErr } = await supabase
-      .from("employer_refs")
+      .from('employer_refs')
       .insert({
         country: data.employer_country,
         input_name: data.employer_legal_name,
@@ -89,9 +91,9 @@ export async function POST(req: Request) {
         input_website: data.employer_website ?? null,
         identifier_type: data.employer_identifier_type ?? null,
         identifier_value: data.employer_identifier_value ?? null,
-        resolution_status: "UNRESOLVED",
+        resolution_status: 'UNRESOLVED',
       })
-      .select("id")
+      .select('id')
       .single();
 
     if (empErr) throw empErr;
@@ -102,18 +104,18 @@ export async function POST(req: Request) {
       (data.rejection_message_excerpt ? detectPII(data.rejection_message_excerpt) : false);
 
     // Provide safe defaults (schema already defaults, but we keep it explicit here too)
-    const jobFamily = data.job_family ?? "OTHER";
-    const seniority = data.seniority ?? "UNKNOWN";
-    const source = data.source ?? "OTHER";
-    const processStage = data.process_stage ?? "APPLIED_ONLY";
-    const outcome = data.outcome ?? "REJECTED";
-    const issueTypes = data.issue_types && data.issue_types.length ? data.issue_types : ["OTHER"];
+    const jobFamily = data.job_family ?? 'OTHER';
+    const seniority = data.seniority ?? 'UNKNOWN';
+    const source = data.source ?? 'OTHER';
+    const processStage = data.process_stage ?? 'APPLIED_ONLY';
+    const outcome = data.outcome ?? 'REJECTED';
+    const issueTypes = data.issue_types && data.issue_types.length ? data.issue_types : ['OTHER'];
 
     const evidenceAvailable = Boolean(data.evidence_available);
     const evidenceTypes = evidenceAvailable ? (data.evidence_types ?? []) : null;
 
     const { data: report, error: repErr } = await supabase
-      .from("reports_raw")
+      .from('reports_raw')
       .insert({
         schema_version: data.schema_version,
 
@@ -137,7 +139,7 @@ export async function POST(req: Request) {
         response_at: data.response_at ?? null,
         process_stage: processStage,
         outcome: outcome,
-        ghosted_days: outcome === "GHOSTED" ? (data.ghosted_days ?? null) : null,
+        ghosted_days: outcome === 'GHOSTED' ? (data.ghosted_days ?? null) : null,
 
         requirements_listed: data.requirements_listed ?? [],
         requirements_met: data.requirements_met ?? null,
@@ -162,7 +164,7 @@ export async function POST(req: Request) {
         pii_flag: piiFlag,
         client_fingerprint: data.client_fingerprint ?? null,
       })
-      .select("id, created_at")
+      .select('id, created_at')
       .single();
 
     if (repErr) throw repErr;
@@ -175,7 +177,7 @@ export async function POST(req: Request) {
       const tokenHash = sha256Hex(contactConfirmationToken);
       const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 7 days
 
-      const { error: contactErr } = await supabase.from("report_contacts").insert({
+      const { error: contactErr } = await supabase.from('report_contacts').insert({
         report_id: report.id,
         email: data.contact_email,
         followup_opt_in: true,
@@ -187,20 +189,20 @@ export async function POST(req: Request) {
       if (contactErr) throw contactErr;
 
       // audit event (server-side)
-      await supabase.from("audit_events").insert({
-        actor: "system",
-        action: "CONTACT_CONFIRMATION_TOKEN_CREATED",
-        entity_type: "report",
+      await supabase.from('audit_events').insert({
+        actor: 'system',
+        action: 'CONTACT_CONFIRMATION_TOKEN_CREATED',
+        entity_type: 'report',
         entity_id: report.id,
         meta: { expires_at: expires.toISOString() },
       });
     }
 
     // audit event: submission
-    await supabase.from("audit_events").insert({
-      actor: "anon",
-      action: "REPORT_SUBMITTED",
-      entity_type: "report",
+    await supabase.from('audit_events').insert({
+      actor: 'anon',
+      action: 'REPORT_SUBMITTED',
+      entity_type: 'report',
       entity_id: report.id,
       meta: {
         schema_version: data.schema_version,
@@ -211,16 +213,15 @@ export async function POST(req: Request) {
 
     // v0 response: return a public receipt code (not the UUID if you prefer)
     const res: {
-  ok: true;
-  report_id: string;
-  contact?: {
-    confirmation_required: true;
-  };
-} = {
-  ok: true,
-  report_id: report.id,
-};
-
+      ok: true;
+      report_id: string;
+      contact?: {
+        confirmation_required: true;
+      };
+    } = {
+      ok: true,
+      report_id: report.id,
+    };
 
     if (contactConfirmationToken) {
       res.contact = {
@@ -231,12 +232,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json(res, { status: 200 });
   } catch (err: unknown) {
-  const message =
-    err instanceof Error ? err.message : "Unknown error";
+    const message = err instanceof Error ? err.message : 'Unknown error';
 
-  return NextResponse.json(
-    { ok: false, error: "ServerError", message },
-    { status: 500 }
-  );
- }
+    return NextResponse.json({ ok: false, error: 'ServerError', message }, { status: 500 });
+  }
 }

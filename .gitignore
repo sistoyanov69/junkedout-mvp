@@ -44,3 +44,6 @@ next-env.d.ts
 .env.local
 .env
 .env.*
+
+# Local AI tool secrets
+.continue/secrets.json
